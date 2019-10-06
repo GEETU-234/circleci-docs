@@ -126,6 +126,14 @@ that other processes can share the remaining memory of your CircleCI build conta
 If you are still consistently hitting memory limits,
 consider [increasing your project's RAM](https://circleci.com/docs/2.0/configuration-reference/#resource_class).
 
+How do you know your program has a memory leak? A very common telltale sign is the java.lang.OutOfMemoryError error. This error has several detail messages that would allow you to determine if there is a memory leak or not:
+
+Java heap space: Means that memory resources could not be allocated for a particular object in the Java heap. This can mean several things, including a memory leak, or the specified heap size is lower than what the application needs. It could also mean that your program is using a lot of finalizers.
+PermGen space: This means that the permanent generation area is already full. This area is where the method and class objects are stored. You can easily correct this by increasing the space via -XX:MaxPermSize.
+Requested array size exceeds VM limit: This means that the program is trying to assign an array that is > than the heap size.
+Request <size> bytes for <reason>. Out of swap space?: This means that an allocation using the local heap did not succeed, or the native heap is close to being all used up.
+<Reason> <stack trace> (Native method): This means that a native method was not allocated the required memory.
+
 ## See Also
 
 [Java Language Guide]({{ site.baseurl }}/2.0/language-java/)
